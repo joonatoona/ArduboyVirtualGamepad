@@ -15,8 +15,19 @@ bool startButton = false, selectButton = false;
 const int m = 0xFFFF;
 const int buttonHeldTime = 300, buttonReleaseTime = 1000;
 
+void customBegin() {
+  arduboy.boot();
+  arduboy.blank();
+  arduboy.flashlight();
+  arduboy.systemButtons();
+  do {
+    delay(50);
+  } while (arduboy.buttonsState());
+}
+
+
 void setup() {
-  arduboy.begin();
+  customBegin();
   arduboy.setFrameRate(120);
 
   // Initialize Joystick Library
@@ -42,6 +53,7 @@ void loop() {
     {
       Joystick.setButton(2, false);
       Joystick.setButton(3, false);
+      digitalWrite(LED_BUILTIN_TX, HIGH);
       selectButton = false;
       startButton = false;
     }
@@ -61,11 +73,13 @@ void loop() {
     if (x != prevx)
     {
       Joystick.setXAxis(x);
+      digitalWrite(LED_BUILTIN_TX, HIGH);
       prevx = x;
     }
     if (y != prevy)
     {
       Joystick.setYAxis(y);
+      digitalWrite(LED_BUILTIN_TX, HIGH);
       prevy = y;
     }
 
@@ -77,6 +91,7 @@ void loop() {
       {
         holdSpecialButton = millis() + buttonReleaseTime;
         Joystick.setButton(3, true);
+        digitalWrite(LED_BUILTIN_TX, HIGH);
         startButton = true;
       }
     }
@@ -91,6 +106,7 @@ void loop() {
       {
         holdSpecialButton = millis() + buttonReleaseTime;
         Joystick.setButton(2, true);
+        digitalWrite(LED_BUILTIN_TX, HIGH);
         selectButton = true;
       }
     }
@@ -101,12 +117,14 @@ void loop() {
     {
       button0 = !button0;
       Joystick.setButton(0, button0);
+      digitalWrite(LED_BUILTIN_TX, HIGH);
     }
 
     if (button1 != arduboy.pressed(B_BUTTON))
     {
       button1 = !button1;
       Joystick.setButton(1, button1);
+      digitalWrite(LED_BUILTIN_TX, HIGH);
     }
   }
 
